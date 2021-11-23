@@ -52,7 +52,6 @@ function [str_Mod1_R, str_Mod1_C, str_Mod3_R, str_Mod3_C, str_MC_Stats]=Metaboli
 % 20180809 by Joe (JA): update xls input parameter titles
 % 20181021 Dylan: add header
 % 20181118 by Joe (JA): update MCStats ouput column titles
-% 2021.11 Gino: update matrix dimention for underivatized chol, x30
 %%
 % we ignore data below cutoff, it is a nX1 vector for the n species we are
 %looking at
@@ -199,7 +198,6 @@ function [str_Mod1_R, str_Mod1_C, str_Mod3_R, str_Mod3_C, str_MC_Stats]=Metaboli
          [Mod1_R, Mod1_C, Mod3_R, Mod3_C, MC_Stats] = BothModels(samplenames{i},datas{i},cutoff(i),controls{i},lipids{i},elongation,p_s_e_user{i},D_1_restriction,MC_successes(i),min_lik_coefficient_LetJoeDecide,SaveFigs,q,ENRICH); % calculate for FA data with the control in it
         else %dylan here we calculate chol, where model is slightly different
             choldat=[datas{i},zeros(rows(datas{i}),35-cols(datas{i}))]; %dylan: shit I don't have to do that much work for cholesterol! this will create a big zero matrix for that!
-            % 2021.11 Gino, change from 35 to 30 for underivatized chol
             [Mod1_R, Mod1_C]=Cholesterol_Automated_Batch(choldat,cutoff(i),controls{i},0,q,lambda,user_p, ENRICH); %dylan : added q to modeling function 0.99 is for testing the difference in enrichment don't d 0.99 for the screen
            %[Model_results, Model_colnames]=Cholesterol_Automated_Batch(data,cutoff,num_controls,SaveFigs,q,lambda,user_p,ENRICH)
             

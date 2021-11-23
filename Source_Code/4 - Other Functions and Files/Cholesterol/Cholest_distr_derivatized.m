@@ -9,24 +9,17 @@ function pdf_mix=Cholest_distr(p,q,s,varargin)
 %There are 32 possible heavy states (30 for all carbons, 2 for the two
 %silicon species) and one state with no labels
 
-%2021/11/22 update:
-%underivatized chol, C27H46O, remove Si and 3 sigle carbons
-%There are 28 possible heavy states 
-% (27 for all carbons, and one state with no labels)
-
 if(isempty(varargin))
     enrich=.984;%%%enrichment fraction of glucose carbons
 else
     enrich=varargin{1};
 end
+pdf=zeros(1,33);
+q2=q; %%%%%%%for adding in new background carbons
 
-%pdf=zeros(1,28); %%derivatized 32, underivatized 28
-
-%q2=q; %%%%%%%for adding in new background carbons(pdf_5)
-
-%s0=.9223; %%Silicon labeling frequencies
-%s1=.0468;
-%s2=.0309;
+s0=.9223; %%Silicon labeling frequencies
+s1=.0468;
+s2=.0309;
 
 p_2=p*(enrich^2)+(1-p)*q^2; %Prob (A-CoA has 2 C13s)
 p_1=2*q*(1-q)*(1-p)+2*p*enrich*(1-enrich); %Prob(A-CoA has 1 C13)
@@ -43,40 +36,38 @@ for i=1:21
     end
 end
 
-%pdf_5=pdf_sil(q2,s0,s1,s2);%get pdf of silicon/carbon unit added on for GC/MS
+pdf_5=pdf_sil(q2,s0,s1,s2);%get pdf of silicon/carbon unit added on for GC/MS
 
 %%%Mix pdf_5 and pdf_27 together
-%%%Use pdf_27 directly for underivatized
-pdf=pdf_27;
-%for i=1:28
-%    for j=1:6
-%        pdf(i+j-1)=pdf(i+j-1)+pdf_27(i)*pdf_5(j);
-%    end
-%end
+
+for i=1:28
+    for j=1:6
+        pdf(i+j-1)=pdf(i+j-1)+pdf_27(i)*pdf_5(j);
+    end
+end
 
 %%%%%%%%%%%%Make Bin_Distr%%%%%%%%%%%%
-bin_distr=binopdf(0:27,27,q);
-%bin_distr=zeros(1,33);
-%temp_distr=binopdf(0:27,27,q);
-%for i=1:28
-%    for j=1:6
-%        bin_distr(i+j-1)=bin_distr(i+j-1)+temp_distr(i)*pdf_5(j);
-%    end
-%end
+bin_distr=zeros(1,33);
+temp_distr=binopdf(0:27,27,q);
+for i=1:28
+    for j=1:6
+        bin_distr(i+j-1)=bin_distr(i+j-1)+temp_distr(i)*pdf_5(j);
+    end
+end
 
 pdf_mix=s*pdf+(1-s)*bin_distr;
 
 end
 
-%function pdf_5=pdf_sil(q2,s0,s1,s2)
-%    pdf_5=zeros(1,6);
-%    pdf_5(1)=s0*(1-q2)^3;
-%    pdf_5(2)=s1*(1-q2)^3 + 3*s0*q2*(1-q2)^2;
-%    pdf_5(3)=s2*(1-q2)^3 + 3*s1*q2*(1-q2)^2+ 3*s0*(1-q2)*q2^2;
-%    pdf_5(4)=3*s2*q2*(1-q2)^2+3*s1*(1-q2)*q2^2+s0*q2^3;
-%    pdf_5(5)=3*s2*(1-q2)*q2^2+s1*q2^3;
-%    pdf_5(6)=s2*q2^3;
-%end
+function pdf_5=pdf_sil(q2,s0,s1,s2)
+    pdf_5=zeros(1,6);
+    pdf_5(1)=s0*(1-q2)^3;
+    pdf_5(2)=s1*(1-q2)^3 + 3*s0*q2*(1-q2)^2;
+    pdf_5(3)=s2*(1-q2)^3 + 3*s1*q2*(1-q2)^2+ 3*s0*(1-q2)*q2^2;
+    pdf_5(4)=3*s2*q2*(1-q2)^2+3*s1*(1-q2)*q2^2+s0*q2^3;
+    pdf_5(5)=3*s2*(1-q2)*q2^2+s1*q2^3;
+    pdf_5(6)=s2*q2^3;
+end
     
     
     

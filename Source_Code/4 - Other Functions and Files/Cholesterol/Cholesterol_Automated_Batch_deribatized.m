@@ -10,10 +10,6 @@ function [Model_results, Model_colnames]=Cholesterol_Automated_Batch(data,cutoff
 % 2015.06, revise things for lambda and control
 % 2015.08, to fix p=0.8 at local maxima, I added parameter user_p=[0,0.5]
 % try to add try catch
-% Gino
-% 2011.11, update to underivatized chol
-% labels from 32 to 27
-% mX35 to mX30, updated in Metabolism_Preprocess_UCLA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %it should be called as:
@@ -158,7 +154,7 @@ function [Model_results, Model_colnames]=Cholesterol_Automated_Batch(data,cutoff
     %%%%%%%%%collect data to write to excel%%%%%%%%%%%%
     Model_results=[[q*ones(1,runs),qs]',[lambda*ones(1,runs),lambdas]',ps',ss',liks',fitmix];
     Model_colnames={'q','lambda','p','s','log_lik','M-2','M-1','M+0'};
-    for j=1:32 %might need to be changed to 27
+    for j=1:32;
         Model_colnames{length(Model_colnames)+1}=['M+',num2str(j)];
     end
     
