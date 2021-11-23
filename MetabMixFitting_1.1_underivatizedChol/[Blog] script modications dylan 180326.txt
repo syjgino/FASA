@@ -1,0 +1,44 @@
+20180326 Dylan added D_1_restriction handle; so that Model 3 restrict D_1 according to D_0 and D_2.
+	this is for Joe to compare with ISA-elongation-once model
+	most changes are made to [NewModel_MLEFIT.m]
+	to enable this restriction, I passed ENRICH all the way to [NewModel_MLEFIT.m]
+20170828 Dylan: added saving figure function for elongation=2. here on the figure it still says Model 1.5 , but it's actually model 3.5
+20170814 Dylan: 
+[1]. allow users to set ENRICH (this is the enrichment of C13 in C13 tracer). 
+	I'm doing this because ENRICH changed from 0.984 to 0.99 even 1.00 in our C13 Glucose datasheet. 
+	And Joe wants to be accurate
+for cholesterol
+comments:
+changing ENRICH from 0.984 to 0.99. I tested Wayne's BMM_TLR data set for chol. 
+for those p>10%
+the change of modeled p is smaller than the sample standard deviation
+
+[2]. Allow users to run Model 3 without running Model 1. reason: for Joe's VLC FAs, it takes a long time to Run model 1 when there is little synthesis. just to save time. This change involves multiple file updates. Now, 
+elongation=2; % elongation=0 only runs model 1, 
+               % elongation=1 runs both model 1 & 3, 
+                     % use the likelihood from Model 1 as a termination criteira for model 3 iterations.
+                     %and plot Model 1 and 3 results together
+               % elongation=2 runs only Model 3, if there's no user setup p_s_e, it will set initial p =[.425,.025,.55],
+                    %and randomize e and s
+                    % since no likihood from Model1 is available, I set it to -1.
+
+2016.6.14 Dylan: according to Joe, the Model 3 result will not tolerate any value that has worse fit than Model 1.
+      
+
+2016.2.26 Dylan add P_source, fix p0,p1,p2 for Joseph Argus
+
+-------------problem remaining-----
+[] skip those > 10min?
+[] chol(not FA) sensitive to q and lambda, how should we decide good q and lambda, while likelihood doesn't tell much?
+[] some chol p>0.5 is still fixable, because s is not extremely low. 
+
+
+-------------fixed-----------------
+2015.10.1 when chol s is extremely low, p can't be calculated accurately, sometimes the p will go up to the boundary. we set p=NaN  for this scenario
+2015.6.26 temp file storage and better interface:
+	you can look at calculation live, and they will be saved in a temp.mat file
+	if script crashes, we can keep track
+2015.6.27 q and lambda calculation from control:
+	priority: user value > compute from control samples > default value
+	[q=0.011, lambda=0.023]
+	also fixed some formatting problem
