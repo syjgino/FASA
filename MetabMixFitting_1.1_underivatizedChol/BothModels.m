@@ -250,7 +250,7 @@ scrsz = get(0,'ScreenSize');
     end
     close(h2)
     
-    if (elongation ==2 )
+    if (elongation==2 )
         Model1_results=[];
         Model1_colnames=[];
     end
